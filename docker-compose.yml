@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=app
+      - FLASK_ENV=development
+    depends_on:
+      - db
+    entrypoint: >
+      sh -c "flask db init || true && flask db migrate || true && flask db upgrade && flask run --host=0.0.0.0"
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ads
+    ports:
+      - "5432:5432"
